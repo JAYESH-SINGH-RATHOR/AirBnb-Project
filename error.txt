@@ -1,0 +1,161 @@
+app.js page 
+
+// import express from "express"
+// import mongoose from "mongoose"
+// import Listing from "./models/Listing.js"
+// import path from "path"
+// import {fileURLToPath} from "url"
+// import methodoverride from "method-override"
+// import ejsmate from "ejs-mate"
+// import wrapAsync  from "./utils/wrapAsync.js"
+// import ExpressError from "./utils/ExpressError.js"
+// import listingSchema from "./Schema.js"
+// import Review from "./models/Review.js"
+// const app = express();
+// const port = 8090;
+
+// const mongo_url = "mongodb://localhost:27017/Users";
+// main().then(() =>{
+//     console.log("connected to db");
+// }).catch((error) =>{
+//     console.log("error is " , error);
+// })
+
+
+// async function main(params) {
+//     await mongoose.connect(mongo_url);
+// };
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+// app.set("view engine" , "ejs");
+// app.set("views", path.join(__dirname , "views"));
+// app.use(express.urlencoded({extended:true}));
+// app.use(methodoverride("_method"));
+// app.engine("ejs" , ejsmate);
+// app.use(express.static(path.join(__dirname , "public")));
+
+// app.get("/" , (req,res) =>{
+//     res.send("Hi , I am root of project")
+// })
+
+// const validateListing = (req , res , next) =>{
+//      // handling error using joi validation
+//         let {error} =  listingSchema.validate(req.body); 
+//         if(error){
+//             let errmsg = error.details.map(el => el.message).join(",")
+//             throw new ExpressError(400 , errmsg);
+//         }
+//         else{
+//             next();
+//         }
+// }
+
+// app.get("/listing" , wrapAsync(async(req,res) =>{
+//     const allListing = await Listing.find({});
+//     res.render("listings/index" , {allListing})
+// }));
+
+// app.get("/listing/new" , (req,res) =>{
+//     res.render("listings/form.ejs")
+// })
+
+// app.get("/listing/:id" , wrapAsync(async(req,res) =>{
+//     let {id} = req.params;
+//     const listing = await Listing.findById(id);
+//     res.render("listings/show.ejs" , {listing})
+// }));
+
+// app.post("/listing" , validateListing , wrapAsync(async(req,res , next) =>{
+//         const newlisting =  new Listing(req.body.listings);
+//         await newlisting.save();
+//         res.redirect("/listing");
+   
+// }));
+
+// app.get("/listing/:id/edit" , wrapAsync(async(req,res) =>{
+//     let {id} = req.params;
+//     const listing = await Listing.findById(id);
+//     res.render("listings/edit.ejs" , {listing});
+// }))
+
+// app.put("/listing/:id" , validateListing ,wrapAsync(async(req,res) =>{
+//     let {id} = req.params;
+//     await Listing.findByIdAndUpdate(id , {...req.body.listings});
+//     res.redirect(`/listing/${id}`)
+// }))
+
+// app.delete("/listing/:id" , wrapAsync(async(req,res) =>{
+//     let {id} = req.params;
+//     let deletedListing = await Listing.findByIdAndDelete(id);
+//     console.log(deletedListing);
+//     res.redirect("/listing")
+// }));
+
+// app.post("/listing/:id/reviews", async (req, res) => {
+//     const { id } = req.params;
+
+//     const listing = await Listing.findById(id);
+
+//     const newReview = new Review(req.body.review);
+//     await newReview.save();
+
+//     listing.Reviews.push(newReview._id);
+//     await listing.save();
+
+//     res.redirect(`/listing/${id}`);
+// });
+
+// // app.get("/testlisting" , async(req,res) =>{
+// //     let samplelisting = new Listing({
+// //         title:"MY House",
+// //         description:"on the beach",
+// //         Price:1200,
+// //         Location:"delhi , Gauttum Buddha Nagar",
+// //         Country:"India"
+// //     })
+// //     await samplelisting.save();
+// //     console.log("data is saved into the db");
+// //     res.send("Successful testing")
+// // })
+
+// app.use((req, res, next) => {
+//     next(new ExpressError(404, "Page not found!"));
+// });
+
+
+// app.use((err ,req,res,next ) =>{
+//     let {statusCode = 500 , message = "something went wrong"} = err;
+//     // res.status(statusCode).send(message);
+//     res.status(statusCode).render("error.ejs" , {message});
+// })
+
+
+
+// app.listen(port ,() =>{
+//     console.log(`app is running on port ${port}`);
+// })
+
+
+on date (02/02/0226);
+
+
+Schema Page
+
+// import joi from "joi";
+
+// const listingSchema = joi.object({
+//     listing : joi.object({
+//         title: joi.string().required(),
+//         description : joi.string().required(),
+//         Location : joi.string().required(),
+//         Country : joi.string().required(),
+//         Price : joi.number().required().min(0),
+//         imgaes : joi.string().allow('' , null)
+
+//     }).required()
+// });
+
+// export default listingSchema;
+
+

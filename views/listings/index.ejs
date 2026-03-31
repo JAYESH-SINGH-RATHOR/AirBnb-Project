@@ -1,0 +1,19 @@
+<% layout("layouts/boillerplate")  %>
+<body>
+    <h2>AirBnb Listings</h2>
+
+    <div class="row row-cols-lg-5 row-cols-md-3 row-cols-sm-2 row-cols-xs-1">
+        <% for(let listing of allListing ) { %>
+   <a href="/listing/<%= listing._id %>" class="listing_link">
+
+     <div class="card mt-3 p-2" style="width: 13rem;">
+  <img src="<%= listing.imgaes %>" class="card-img-top" style="height: 13rem;" alt="<%= listing.title%>">
+  <div class="card-body">
+    <p class="card-text"><b><%= listing.title%></b>.<br/>
+    &#8377;<%= listing.Price.toLocaleString() %> per night</p>
+  </div>
+</div>
+   </a>
+    <% } %>
+     </div>
+</body>

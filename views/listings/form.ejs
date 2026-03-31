@@ -1,0 +1,55 @@
+<% layout("layouts/boillerplate")  %>
+<div class="row">
+    <div class="col-8 offset-2">
+    <h2 class="mt-3">Create a New Listing </h2>
+    <form action="/listing" method="post" novalidate class="needs-validation">
+        <div class="mt-3">
+            <label for="title" class="form-label">Title</label>
+            <input name="listings[title]" placeholder="enter title" type="text" class="form-control" required />
+            <div class="valid-feedback">Title looks like good!</div>
+            <div class="invalid-feedback">Plese enter a valid title!</div>
+        </div>
+        
+        <div class="mt-3">
+            <label for="imgaes" class="form-label">Image</label>
+            <input name="listings[imgaes]" placeholder="enter image url" type="text" class="form-control"  />
+             <div class="valid-feedback">image looks like good!</div>
+            <div class="invalid-feedback">Plese enter a valid images url!</div>
+        </div>
+
+       <div class="mt-3">
+        <label for="description" class="form-label">
+            Description</label>
+           <textarea name="listings[description]" placeholder="enter description" type="text" class="form-control" required ></textarea>
+            <div class="valid-feedback">description looks like good!</div>
+            <div class="invalid-feedback">Plese enter a valid Description should be clear!</div>
+       </div>
+
+
+            <div class="mt-3">
+            <label for="Price" class="form-label">Price</label>
+            <input name="listings[Price]" placeholder="enter price"  class="form-control" required/>
+             <div class="valid-feedback">Price looks like good!</div>
+            <div class="invalid-feedback">Plese enter a valid Price!</div>
+        </div>
+        
+                <div class="row">
+        <div class="mt-3 col-md-6">
+            <label for="Country" class="form-label">Contry</label>
+            <input name="listings[Country]" placeholder="enter country" type="text" class="form-control" required />
+             <div class="valid-feedback">Country Name looks like good!</div>
+            <div class="invalid-feedback">Plese enter a valid Country Name!</div>
+        </div>
+
+        <div class="mt-3 col-md-6">
+            <label for="Location" class="form-label">Location</label>
+            <input name="listings[Location]" placeholder="enter location" type="text" class="form-control" required/>
+             <div class="valid-feedback">Provinces looks like good!</div>
+            <div class="invalid-feedback">Plese enter a valid Provinces of your Country!</div>
+        </div>
+            </div>
+
+        <button class="btn btn-danger fs-5 p-2 m-3 w-25">ADD</button>
+    </form>
+ </div>
+</div>

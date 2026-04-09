@@ -1,29 +1,16 @@
 import express from "express";
 const routes = express.Router();
 import wrapAsync from "../utils/wrapAsync.js";
-import ExpressError from "../utils/ExpressError.js";
-import {listingSchema , reviewSchema} from "../Schema.js";
 import Listing from "../models/Listing.js";
-import {isLoggedin} from "../middleware.js";
-
+import {isLoggedin , isowner , validateListing} from "../middleware.js";
+import {index} from "../controllers/listing.js";
 // validate listing models
 
-const validateListing = (req, res, next) => {
-    const { error } = listingSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(",");
-        throw new ExpressError(400, msg);
-    }
-    next();
-};
 
 
 
 /* INDEX */
-routes.get("/", wrapAsync(async (req, res) => {
-    const allListing = await Listing.find({});
-    res.render("listings/index", { allListing });
-}));
+routes.get("/", wrapAsync(index));
 
 /* NEW FORM */
 routes.get("/new", isLoggedin ,  (req, res) => {
@@ -33,11 +20,13 @@ routes.get("/new", isLoggedin ,  (req, res) => {
 /* SHOW */
 routes.get("/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate("Reviews");
+    const listing = await Listing.findById(id).populate({ path: "Reviews",
+         populate: { path: "author" } }).populate("owner");
     if (!listing) {
         req.flash("error" , "Listing that you are trying to find is not extists");
         return res.redirect("/listing");
     }
+    console.log(listing)
     res.render("listings/show", { listing });
 }));
 
@@ -47,6 +36,7 @@ routes.post(
     validateListing,
     wrapAsync(async (req, res) => {
         const newListing = new Listing(req.body.listings);
+        newListing.owner = req.user._id;
         await newListing.save();
         req.flash("success" , "Listing created successfully");
        return res.redirect("/listing");
@@ -54,7 +44,7 @@ routes.post(
 );
 
 /* EDIT FORM */
-routes.get("/:id/edit", isLoggedin ,wrapAsync(async (req, res) => {
+routes.get("/:id/edit", isLoggedin , isowner ,wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
     if (!listing) {
@@ -66,19 +56,19 @@ routes.get("/:id/edit", isLoggedin ,wrapAsync(async (req, res) => {
 
 /* UPDATE */
 routes.put(
-    "/:id", isLoggedin,
-    validateListing,
-    wrapAsync(async (req, res) => {
-        const { id } = req.params;
-        await Listing.findByIdAndUpdate(id, req.body.listings);
-            req.flash("success" , "Listing update successfully");
-
-        res.redirect(`/listing/${id}`);
-    })
+  "/:id",
+  isLoggedin, isowner ,
+  validateListing,
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    await Listing.findByIdAndUpdate(id, req.body.listings);
+    req.flash("success", "Listing updated successfully");
+    res.redirect(`/listing/${id}`);
+  })
 );
 
 /* DELETE */
-routes.delete("/:id", isLoggedin , wrapAsync(async (req, res) => {
+routes.delete("/:id", isLoggedin ,isowner, wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
     req.flash("success" , "Listing deleted successfully");

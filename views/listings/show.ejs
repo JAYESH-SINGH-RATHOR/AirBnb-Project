@@ -7,12 +7,14 @@
     <div class="card listing-card mt-3" style="width: 100%;">
   <img src="<%= listing.imgaes %>" class="card-img-top show-img" alt="<%= listing.title%>">
   <div class="card-body">
+    <i class="fas fa-user-circle"></i> <%= listing.owner.username %> <br>
     <%= listing.description %> <br>  &#8377; <%= listing.Price.toLocaleString("en-IN") %> <br> <%=listing.Location %> <br> <%= listing.Country %>
     </p>
   </div>
 </div>
-
-            <div class="button_SHOW">
+                <% if(curruser && listing.owner._id.equals(curruser._id)) { %>
+            <div class="button">
+                <div class="button_SHOW">
                 <a href="/listing/<%= listing._id %>/edit">
                 <button class="btn btn-primary">Edit </button>
             </a>
@@ -21,8 +23,11 @@
                 <button class="btn btn-success">Delete </button>
             </form>
             </div>
+            </div>
+            <% } %>
  </div>
         <!-- division for reviews -->
+         <% if(curruser) { %>
          <div class="col-8 offset-3">
             <hr>
             <h3>Leave a Reviews for Particular Villa</h3>
@@ -41,15 +46,20 @@
 </form>
          </div>
 
+         
+            <% } %>
+
          <div class="col-8 offset-3">
     <hr>
     <p>All Reviews</p>
+
 
     <div class="row g-3">
         <% listing.Reviews.forEach(review => { %>
             <div class="col-md-5 ms-3 mb-3">
                 <div class="card p-2">
                     <div class="card-body">
+                        <p class="card-text" ><%= review.author ? review.author.username : "Anonymous" %></p>
                         <h6 class="card-title">Rating: <%= review.Rating %></h6>
                         <p class="card-text"><%= review.Comment %></p>
                     </div>
@@ -61,5 +71,6 @@
             </div>
         <% }); %>
     </div>
+
 </div>
 </div>

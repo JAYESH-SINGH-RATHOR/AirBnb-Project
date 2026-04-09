@@ -4,7 +4,7 @@ import wrapAsync from "../utils/wrapAsync.js";
 import ExpressError from "../utils/ExpressError.js";
 import {listingSchema , reviewSchema} from "../Schema.js";
 import Listing from "../models/Listing.js";
-import isLoggedin from "../middleware.js";
+import {isLoggedin} from "../middleware.js";
 
 // validate listing models
 

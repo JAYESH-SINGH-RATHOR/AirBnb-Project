@@ -11,5 +11,14 @@
         <a class="nav-link" href="/listing/new">Add New Listing</a>
       </div>
     </div>
+      <div class="navbar-nav">
+        <% if(!curruser) { %>
+        <a class="nav-link" href="/signup">Signup</a>
+        <a class="nav-link" href="/login">Login</a>
+        <% } %>
+        <% if(curruser) { %>
+        <a class="nav-link" href="/logout">Logout</a>
+        <% } %>
+    </div>
   </div>
 </nav>

@@ -1,7 +1,11 @@
 import express from "express";
 const router = express.Router();
+
 import User from "../models/user.js";
 import passport from "passport";
+import { saveRedirectUrl } from "../middleware.js";
+
+/* ================= SIGNUP ================= */
 
 router.get("/signup", (req, res) => {
     res.render("users/signup");
@@ -16,6 +20,7 @@ router.post("/signup", async (req, res, next) => {
 
         req.login(registeredUser, (err) => {
             if (err) return next(err);
+
             req.flash("success", "Welcome to AirBnb");
             res.redirect("/listing");
         });
@@ -26,31 +31,34 @@ router.post("/signup", async (req, res, next) => {
     }
 });
 
+/* ================= LOGIN ================= */
+
 router.get("/login", (req, res) => {
     res.render("users/login");
 });
 
 router.post(
     "/login",
+    saveRedirectUrl,
     passport.authenticate("local", {
         failureFlash: true,
         failureRedirect: "/login"
     }),
-    async(req, res) => {
-        req.flash("success", "Welcome to AirBnb");
-        req.flash("success",    "Welcome to AirBnb , You are logged in");
-        res.redirect("/listing");
+    (req, res) => {
+        req.flash("success", "Welcome to AirBnb, you are logged in");
+        res.redirect(res.locals.redirectUrl || "/listing");
     }
 );
 
-router.get('/logout' , (req,res,next) =>{
-    req.logOut((err) =>{
-        if(err){
-         return  next(err);
-        }
-        req.flash("success" , "You are logged out");
+/* ================= LOGOUT ================= */
+
+router.get("/logout", (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err);
+
+        req.flash("success", "You are logged out");
         res.redirect("/listing");
-    })
-})
+    });
+});
 
 export default router;

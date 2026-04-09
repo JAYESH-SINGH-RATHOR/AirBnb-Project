@@ -4,7 +4,7 @@ import wrapAsync from "../utils/wrapAsync.js";
 import ExpressError from "../utils/ExpressError.js";
 import {listingSchema , reviewSchema} from "../Schema.js";
 import Listing from "../models/Listing.js";
-
+import isLoggedin from "../middleware.js";
 
 // validate listing models
 
@@ -26,7 +26,7 @@ routes.get("/", wrapAsync(async (req, res) => {
 }));
 
 /* NEW FORM */
-routes.get("/new", (req, res) => {
+routes.get("/new", isLoggedin ,  (req, res) => {
     res.render("listings/form");
 });
 
@@ -43,7 +43,7 @@ routes.get("/:id", wrapAsync(async (req, res) => {
 
 /* CREATE */
 routes.post(
-    "/",
+    "/", isLoggedin,
     validateListing,
     wrapAsync(async (req, res) => {
         const newListing = new Listing(req.body.listings);
@@ -54,7 +54,7 @@ routes.post(
 );
 
 /* EDIT FORM */
-routes.get("/:id/edit", wrapAsync(async (req, res) => {
+routes.get("/:id/edit", isLoggedin ,wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
     if (!listing) {
@@ -66,7 +66,7 @@ routes.get("/:id/edit", wrapAsync(async (req, res) => {
 
 /* UPDATE */
 routes.put(
-    "/:id",
+    "/:id", isLoggedin,
     validateListing,
     wrapAsync(async (req, res) => {
         const { id } = req.params;
@@ -78,7 +78,7 @@ routes.put(
 );
 
 /* DELETE */
-routes.delete("/:id", wrapAsync(async (req, res) => {
+routes.delete("/:id", isLoggedin , wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
     req.flash("success" , "Listing deleted successfully");

@@ -34,7 +34,10 @@ routes.get("/new", (req, res) => {
 routes.get("/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id).populate("Reviews");
-    if (!listing) throw new ExpressError(404, "Listing not found");
+    if (!listing) {
+        req.flash("error" , "Listing that you are trying to find is not extists");
+        return res.redirect("/listing");
+    }
     res.render("listings/show", { listing });
 }));
 
@@ -45,7 +48,8 @@ routes.post(
     wrapAsync(async (req, res) => {
         const newListing = new Listing(req.body.listings);
         await newListing.save();
-        res.redirect("/listing");
+        req.flash("success" , "Listing created successfully");
+       return res.redirect("/listing");
     })
 );
 
@@ -53,7 +57,10 @@ routes.post(
 routes.get("/:id/edit", wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
-    if (!listing) throw new ExpressError(404, "Listing not found");
+    if (!listing) {
+        req.flash("error" , "Listing that you are trying to edit is not extists");
+        res.redirect("/listing");
+    }
     res.render("listings/edit", { listing });
 }));
 
@@ -64,6 +71,8 @@ routes.put(
     wrapAsync(async (req, res) => {
         const { id } = req.params;
         await Listing.findByIdAndUpdate(id, req.body.listings);
+            req.flash("success" , "Listing update successfully");
+
         res.redirect(`/listing/${id}`);
     })
 );
@@ -72,6 +81,7 @@ routes.put(
 routes.delete("/:id", wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
+    req.flash("success" , "Listing deleted successfully");
     res.redirect("/listing");
 }));
 
